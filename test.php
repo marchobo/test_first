@@ -26,7 +26,7 @@ $pdf -> useTemplate($page);
 //テキスト色の設定
 $pdf -> SetTextColor(220, 20, 60);
 //既存テンプレートに文字を書き込む
-$pdf -> Text(195,88,"10");
+$pdf -> Text(195,88,"5");
 $pdf -> Text(195,94,"10");
 
 /*
