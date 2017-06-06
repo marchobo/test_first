@@ -3,6 +3,15 @@
 require_once('lib/tcpdf/tcpdf.php');
 require_once('lib/fpdi/fpdi.php');
 
+//mysql呼んでみる
+/*
+$my_Con = mysqli_connect("localhost","root","t873n338");
+if ($my_Con == false){
+	die("MYSQLの接続に失敗しました。");
+}
+{echo"接続成功！";}
+*/
+
 //FPDIのインスタンス化
 $pdf = new FPDI();
 //フォントのインスタンス化
