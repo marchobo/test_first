@@ -1,13 +1,6 @@
 <?php
 
-<<<<<<< HEAD
 
-=======
-//php情報読み込み
-//phpinfo();
-//クリーン
-//ob_end_clean();
->>>>>>> 一時的
 //tcpdfとfpdiのインクルード
 require_once('lib/tcpdf/tcpdf.php');
 require_once('lib/fpdi/fpdi.php');
