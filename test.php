@@ -1,5 +1,8 @@
 <?php
-
+//php情報読み込み
+//phpinfo();
+//クリーン
+//ob_end_clean();
 //tcpdfとfpdiのインクルード
 require_once('lib/tcpdf/tcpdf.php');
 require_once('lib/fpdi/fpdi.php');
