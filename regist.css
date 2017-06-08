@@ -1,0 +1,15 @@
+#preview{
+	background-color:Azure;
+	width:800px;
+	height:120px;
+	border:dashed 1px Blue;
+}
+
+#mathcode{
+	width:800px;
+	height:120px;
+}
+
+#inputmathcode{
+	 padding:10px 15px 20px 25px;
+}
