@@ -1,0 +1,18 @@
+#preview{
+	background-color:Aquamarine;
+	width:800px;
+	min-height: 25px;
+	border:dashed 1px Green;
+	font-size: large;
+	color: Green;
+
+}
+
+#mathcode{
+	width:800px;
+	height:40px;
+}
+
+#inputmathcode{
+	 padding:10px;
+}

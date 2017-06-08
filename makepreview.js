@@ -1,3 +1,4 @@
+//即時関数
 $(function() {
 	function makePreview() {
 		input = $('#mathcode').val().replace(/</g, "&lt;").replace(/>/g, "&gt;");

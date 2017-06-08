@@ -14,6 +14,9 @@ MathJax.Hub.Config({
   displayIndent: "2em"
 });
 </script>
+
+<script src="checkfunc.js"></script>
+
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
 <script src="http://code.jquery.com/jquery-1.5.1.min.js"></script>
 <script src="makepreview.js"></script>
@@ -85,10 +88,15 @@ MathJax.Hub.Config({
 				<form action="update.php" method="post">
 					<input type="submit" value="変更する">
 					<input type="hidden" name="id" value="<?=$row['id']?>">
+					<input type="hidden" name="daimon" value="<?=$row['daimon']?>">
+					<input type="hidden" name="shomon" value="<?=$row['shomon']?>">
+					<input type="hidden" name="koumoku" value="<?=$row['koumoku']?>">
+					<input type="hidden" name="haiten" value="<?=$row['haiten']?>">
+					<input type="hidden" name="rank" value="<?=$row['rank']?>">
 				</form>
 			</td>
 			<td>
-				<form action="delete.php" method="post">
+				<form action="delete.php" method="post" onSubmit="return check()">
 					<input type="submit" value="削除する">
 					<input type="hidden" name="id" value="<?=$row['id']?>">
 				</form>
