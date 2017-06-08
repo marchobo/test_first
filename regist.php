@@ -23,9 +23,10 @@ MathJax.Hub.Config({
 </head>
 <body>
 	<div id="inputmathcode">
+		<span style="font-size:x-large">復習の指針項目登録</span>
 		<form method="post" action="result.php">
 			項目のコード入力（行内で複数行の数式を書く場合：\displaystyle）<br>
-			<textarea name="mathcode" id="mathcode" rows="1" cols="100" wrap="soft" required></textarea><br>
+			<textarea name="mathcode" id="mathcode" rows="2" cols="100" wrap="soft" required></textarea><br>
 			入力プレビュー<br>
 			<div id="preview"></div>
 			大問番号：
@@ -49,13 +50,54 @@ MathJax.Hub.Config({
 	$pdo = db_connect();
 	$sql = "SELECT * FROM koumoku ORDER BY daimon, shomon";
 	$stmt = $pdo->query($sql);
+	?>
+	<table id="hv_table">
+	<tr>
+		<th>大問</th>
+		<th>小問</th>
+		<th>項目</th>
+		<th>配点</th>
+		<th>ランク</th>
+		<th>変更</th>
+		<th>削除</th>
+	</tr>
+	<?php
 	foreach ($stmt as $row) {
-		// データベースのフィールド名で出力
-		echo '大問'.$row['daimon'].' 小問'.$row['shomon'].' '.$row['koumoku'].' '.$row['haiten'].' '.$row['rank'];
-		// 改行を入れる
-		echo '<br>';
+	?>
+		<tr>
+			<td><?php echo $row['daimon']; ?></td>
+			<td><?php echo $row['shomon']; ?></td>
+			<td id ="koumoku"><?php echo $row['koumoku']; ?></td>
+			<td><?php echo $row['haiten']; ?></td>
+			<td><?php
+			switch($row['rank']){
+				case 0:
+					echo "X";
+					break;
+				case 1:
+					echo "A";
+					break;
+				case 2:
+					echo "B";
+					break;
+			}?></td>
+			<td>
+				<form action="update.php" method="post">
+					<input type="submit" value="変更する">
+					<input type="hidden" name="id" value="<?=$row['id']?>">
+				</form>
+			</td>
+			<td>
+				<form action="delete.php" method="post">
+					<input type="submit" value="削除する">
+					<input type="hidden" name="id" value="<?=$row['id']?>">
+				</form>
+			</td>
+		</tr>
+	<?php
 	}
 	?>
+	</table>
 	</div>
 </body>
 </html>
