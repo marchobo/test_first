@@ -29,7 +29,7 @@ $pdf -> AddPage();
 //フォントの設定
 $pdf -> SetFont('times', '', 14);
 //既存のPDFをテンプレートとして読み込む
-$pdf -> setSourceFile('S16.pdf');
+$pdf -> setSourceFile('templates/S16.pdf');
 //既存PDFの1ページ目をテンプレートに設定
 $page = $pdf -> importPage(1);
 $pdf -> useTemplate($page);
