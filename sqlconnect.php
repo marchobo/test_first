@@ -1,4 +1,6 @@
 <?php
+require_once('session_check.php');
+
 function db_connect(){
 	//DB接続
 	try{

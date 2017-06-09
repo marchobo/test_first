@@ -1,11 +1,25 @@
 <?php
+require_once('session_check.php');
+//直打ち禁止
+if(isset($_POST['click'])){
+	if ($_POST['click'] != 'delete') {
+		die('エラー：不正アクセスの可能性があります。');
+	}
+}
+else{
+	die('エラー：「削除する」をクリックしてください。');
+}
 //データ削除用
 require_once('sqlconnect.php');
 $pdo = db_connect();
 //MYSQLでデータベースからPOSTデータを削除
 $st = $pdo -> prepare("DELETE FROM koumoku WHERE id = ?");
 $st->execute(array($_POST['id']));
+//切断
+$pdo = null;
 
 //登録後、元の画面に戻る
-header( "Location: regist.php" ) ;
+$_SESSION['click']='regist';
+header( "Location: regist.php") ;
+
 ?>
