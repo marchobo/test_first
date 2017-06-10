@@ -39,7 +39,7 @@ require_once('session_check.php');
 </form>
 <hr />
 	<div id="mathview">
-	登録済み項目<br>
+	登録済みPDF一覧<br>
 	<?php
 	require_once('sqlconnect.php');
 	$pdo = db_connect();
@@ -54,6 +54,8 @@ require_once('session_check.php');
 		<th>変更</th>
 		<th>削除</th>
 		<th>項目登録</th>
+		<th>位置登録</th>
+		<th>登録済件数</th>
 	</tr>
 	<?php
 	foreach ($stmt as $row) {
@@ -76,7 +78,7 @@ require_once('session_check.php');
 				<form action="pdfdelete.php" method="post" onSubmit="return check()">
 					<input type="submit" value="削除する">
 					<input type="hidden" name="id" value="<?=$row['id']?>">
-					<input type="hidden" name="click" value="delete">
+					<input type="hidden" name="click" value="pdfdelete">
 				</form>
 			</td>
 			<td>
@@ -89,6 +91,29 @@ require_once('session_check.php');
 					<input type="hidden" name="click" value="regist">
 				</form>
 			</td>
+			<td>
+				<form action="posreg.php" method="post">
+					<input type="submit" value="位置を登録する">
+					<input type="hidden" name="id" value="<?=$row['id']?>">
+					<input type="hidden" name="click" value="posreg">
+				</form>
+			</td>
+			<td><?php
+			$sql = "select * from koumoku where pdfid = ?";
+			$st = $pdo -> prepare($sql);
+			$st->execute(array($row['id']));
+			$countk = $st->rowCount();
+			$sql = "select * from pdfpos where pdfid = ?";
+			$st = $pdo -> prepare($sql);
+			$st->execute(array($row['id']));
+			$countp = $st->rowCount();
+			echo $countp.'/'.$countk;
+			if($countk!=0){
+				if($countp==$countk){
+					echo '(完了)';
+				}
+			}
+			?></td>
 		</tr>
 	<?php
 	}

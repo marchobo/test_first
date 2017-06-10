@@ -1,0 +1,126 @@
+<?php
+require_once('session_check.php');
+//画面が戻って来た場合の対応
+if(isset($_POST['id'])){
+	$_SESSION['pdfid']=$_POST['id'];
+}
+//直打ち禁止
+if(isset($_POST['click'])){
+	if ($_POST['click'] != 'posreg') {
+		die('エラー：不正アクセスの可能性があります。');
+	}
+}
+else{
+	if(isset($_SESSION['click'])){
+		if($_SESSION['click']!='posreg'){
+			die('エラー：正しくアクセスしてください。');
+		}
+		else{
+			//セッションの初期化
+			$_SESSION['click']='';
+		}
+	}
+	else{
+		die('エラー：セッションが設定されていません。');
+	}
+}
+?>
+
+<!doctype html>
+<html lang="ja">
+<head>
+<link rel="stylesheet" type="text/css" href="css/menu.css">
+<link rel="stylesheet" type="text/css" href="css/regist.css">
+<meta charset="utf-8">
+<title>PDFアップロード</title>
+<script src="js/checkfunc.js"></script>
+</head>
+
+<body>
+<?php include('menu.html');?>
+<div id="inputmathcode">
+	<span style="font-size: x-large">復習の指針PDFセル位置設定</span>
+</div>
+<div id="mathview">
+	セル位置一覧（一行ずつ確定してください）<br>
+	<?php
+	require_once('sqlconnect.php');
+	$pdo = db_connect();
+	$sql = "SELECT * FROM koumoku WHERE pdfid = ? ORDER BY daimon, shomon";
+	$stmt = $pdo->prepare($sql);
+	$stmt->execute(array($_SESSION['pdfid']));
+	?>
+	<table id="hv_table">
+	<tr>
+		<th>大問</th>
+		<th>小問</th>
+		<th>項目</th>
+		<th>配点</th>
+		<th>ランク</th>
+		<th>位置X</th>
+		<th>位置Y</th>
+		<th>確定</th>
+	</tr>
+	<?php
+		foreach ($stmt as $row) {
+		?>
+			<tr>
+				<td><?php echo $row['daimon']; ?></td>
+				<td><?php echo $row['shomon']; ?></td>
+				<td id ="koumoku"><?php echo $row['koumoku']; ?></td>
+				<td><?php echo $row['haiten']; ?></td>
+				<td><?php
+				switch($row['rank']){
+					case 0:
+						echo "X";
+						break;
+					case 1:
+						echo "A";
+						break;
+					case 2:
+						echo "B";
+						break;
+				}?></td>
+				<?php
+				//posx,posyデータがあれば取得
+				$flag = 0;//データが既にあったかどうか
+				$posx=null;
+				$posy=null;
+				$sql = "SELECT * FROM pdfpos WHERE id = ?";
+				$stmt = $pdo->prepare($sql);
+				$stmt->execute(array($row['id']));
+				$count = $stmt->rowCount();
+				if ($count != 0){
+					$flag = 1;
+					foreach($stmt as $row2){
+						$posx = $row2['posx'];
+						$posy = $row2['posy'];
+					}
+				}
+				?>
+				<form action="posregresult.php" method="post">
+					<td>
+						<input type="text" name="posx" value="<?php if($flag){echo $posx;}?>" size="10" required>
+					</td>
+					<td>
+						<input type="text" name="posy" value="<?php if($flag){echo $posy;}?>" size="10" required>
+					</td>
+					<td>
+						<input type="submit" value="確定する">
+						<input type="hidden" name="click" value="posreg">
+						<input type="hidden" name="id" value="<?=$row['id']?>">
+						<input type="hidden" name="flag" value="<?=$flag ?>">
+						<input type="hidden" name="pdfid" value="<?=$_SESSION['pdfid'] ?>">
+					</td>
+				</form>
+			</tr>
+		<?php
+		}
+		?>
+	</table>
+	</div>
+	<form action="pospreview.php" method="post">
+		<input type="submit" value="プレビューをダウンロード">
+	</form>
+</body>
+</html>

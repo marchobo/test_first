@@ -13,8 +13,6 @@ $stmt = $pdo->prepare($sql);
 $params = array(':daimon' => $_POST['daimon'], ':shomon' => $_POST['shomon'], ':koumoku' => $_POST['mathcode'], ':haiten' => $_POST['haiten'], ':rank' => $_POST['rank'], ':id' => $_POST['id']);
 // 更新する値と該当のIDが入った変数をexecuteにセットしてSQLを実行
 $stmt->execute($params);
-//切断
-$pdo = null;
 
 //登録後、元の画面に戻る
 $_SESSION['click']='regist';

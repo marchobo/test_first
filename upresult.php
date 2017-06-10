@@ -27,7 +27,7 @@ if ($_FILES['upload']['error'] === 2) {
 } elseif ($_FILES['upload']['size'] === 0) {
 	die('ファイルを選択してください！');
 
-//テキストファイルじゃなかった場合
+//PDFファイルじゃなかった場合
 } elseif ($_FILES['upload']['type'] !== 'application/pdf') {
 	die('PDFファイルを選択してください！');
 }
@@ -48,8 +48,7 @@ if ($count != 0){
 //MYSQLでデータベースにPOSTデータを登録
 $st = $pdo -> prepare("INSERT INTO pdf VALUES(?, ?, ?, ?)");
 $st->execute(array(0, $_POST['univcode'],$_POST['shikenshu'], $_POST['nendo']));
-//切断
-$pdo = null;
+
 
 //登録後、元の画面に戻る
 header( "Location: upload.php" ) ;
