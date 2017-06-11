@@ -84,9 +84,10 @@ MathJax.Hub.Config({
 			入力プレビュー<br>
 			<div id="preview"></div>
 			大問番号：
-			<input type="text" size="5" name="daimon" required>	小問番号：
-			<input type="text" size="5" name="shomon" required>	配点：
-			<input type="text" size="5" name="haiten" required>	ランク：
+			<input type="text" size="4" name="daimon" required>	小問番号：
+			<input type="text" size="4" name="shomon" required>	小問内での順番：
+			<input type="text" size="4" name="junban" required>	配点：
+			<input type="text" size="4" name="haiten" required>	ランク：
 			<select  name="rank" required>
 				<option></option>
 				<option value="0">X</option>
@@ -107,7 +108,7 @@ MathJax.Hub.Config({
 	<?php
 	require_once('sqlconnect.php');
 	$pdo = db_connect();
-	$sql = "SELECT * FROM koumoku WHERE pdfid = ? ORDER BY daimon, shomon";
+	$sql = "SELECT * FROM koumoku WHERE pdfid = ? ORDER BY daimon, shomon, junban";
 	$stmt = $pdo->prepare($sql);
 	$stmt->execute(array($pdfid));
 	?>
@@ -115,6 +116,7 @@ MathJax.Hub.Config({
 	<tr>
 		<th>大問</th>
 		<th>小問</th>
+		<th>順番</th>
 		<th>項目</th>
 		<th>配点</th>
 		<th>ランク</th>
@@ -127,6 +129,7 @@ MathJax.Hub.Config({
 		<tr>
 			<td><?php echo $row['daimon']; ?></td>
 			<td><?php echo $row['shomon']; ?></td>
+			<td><?php echo $row['junban']; ?></td>
 			<td id ="koumoku"><?php echo $row['koumoku']; ?></td>
 			<td><?php echo $row['haiten']; ?></td>
 			<td><?php
@@ -147,6 +150,7 @@ MathJax.Hub.Config({
 					<input type="hidden" name="id" value="<?=$row['id']?>">
 					<input type="hidden" name="daimon" value="<?=$row['daimon']?>">
 					<input type="hidden" name="shomon" value="<?=$row['shomon']?>">
+					<input type="hidden" name="junban" value="<?=$row['junban']?>">
 					<input type="hidden" name="koumoku" value="<?=$row['koumoku']?>">
 					<input type="hidden" name="haiten" value="<?=$row['haiten']?>">
 					<input type="hidden" name="rank" value="<?=$row['rank']?>">

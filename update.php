@@ -44,9 +44,10 @@ MathJax.Hub.Config({
 			入力プレビュー<br>
 			<div id="preview"></div>
 			大問番号：
-			<input type="text" size="5" name="daimon" value="<?= $_POST['daimon']?>" required>	小問番号：
-			<input type="text" size="5" name="shomon" value="<?= $_POST['shomon']?>" required>	配点：
-			<input type="text" size="5" name="haiten" value="<?= $_POST['haiten']?>" required>	ランク：
+			<input type="text" size="4" name="daimon" value="<?= $_POST['daimon']?>" required>	小問番号：
+			<input type="text" size="4" name="shomon" value="<?= $_POST['shomon']?>" required>	小問内での順番：
+			<input type="text" size="4" name="junban" value="<?= $_POST['junban']?>" required>	配点：
+			<input type="text" size="4" name="haiten" value="<?= $_POST['haiten']?>" required>	ランク：
 			<select  name="rank" required>
 				<option></option>
 				<option value="0" <?php if($_POST["rank"] == "0"){print " selected";} ?>>X</option>

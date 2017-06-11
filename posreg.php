@@ -33,6 +33,18 @@ else{
 <link rel="stylesheet" type="text/css" href="css/regist.css">
 <meta charset="utf-8">
 <title>PDFアップロード</title>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false },
+  displayAlign: "left",
+  displayIndent: "2em"
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
 <script src="js/checkfunc.js"></script>
 </head>
 
@@ -54,6 +66,7 @@ else{
 	<tr>
 		<th>大問</th>
 		<th>小問</th>
+		<th>順番</th>
 		<th>項目</th>
 		<th>配点</th>
 		<th>ランク</th>
@@ -67,6 +80,7 @@ else{
 			<tr>
 				<td><?php echo $row['daimon']; ?></td>
 				<td><?php echo $row['shomon']; ?></td>
+				<td><?php echo $row['junban']; ?></td>
 				<td id ="koumoku"><?php echo $row['koumoku']; ?></td>
 				<td><?php echo $row['haiten']; ?></td>
 				<td><?php

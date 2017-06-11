@@ -13,17 +13,17 @@ else{
 require_once('sqlconnect.php');
 //SQLで検索し、既存のデータではないか確認する
 $pdo = db_connect();
-$sql = "select * from koumoku where pdfid = ? and daimon = ? and shomon = ?";
+$sql = "select * from koumoku where pdfid = ? and daimon = ? and shomon = ? and junban = ?";
 $st = $pdo -> prepare($sql);
-$st->execute(array($_POST['pdfid'],$_POST['daimon'], $_POST['shomon']));
+$st->execute(array($_POST['pdfid'],$_POST['daimon'], $_POST['shomon'], $_POST['junban']));
 $count = $st->rowCount();
 if ($count != 0){
 	$_SESSION['click']='regist';
 	die('登録済みのデータです。');
 }
 //MYSQLでデータベースにPOSTデータを登録
-$st = $pdo -> prepare("INSERT INTO koumoku VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$st->execute(array(0, $_POST['univcode'], $_POST['nendo'], $_POST['shikenshu'], $_POST['daimon'],$_POST['shomon'], $_POST['mathcode'],$_POST['haiten'], $_POST['rank'], $_POST['pdfid']));
+$st = $pdo -> prepare("INSERT INTO koumoku VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$st->execute(array(0, $_POST['univcode'], $_POST['nendo'], $_POST['shikenshu'], $_POST['daimon'],$_POST['shomon'],$_POST['junban'], $_POST['mathcode'],$_POST['haiten'], $_POST['rank'], $_POST['pdfid']));
 
 
 
