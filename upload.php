@@ -26,7 +26,8 @@ require_once('session_check.php');
 	大学コード:
 	<input type="number" style="width:50px;" name="univcode" required>	試験種:
 	<input type="number" style="width:50px;" name="shikenshu" style="width:30px;" required>	年度:
-	<input type="number" style="width:50px;" name="nendo" required>
+	<input type="number" style="width:50px;" name="nendo" required>	大問数:
+	<input type="number" style="width:50px;" name="daimonsu" required>
 	</div>
 
 	<!--input typeは"file"を設定する-->
@@ -41,7 +42,7 @@ require_once('session_check.php');
 	<div id="mathview">
 	登録済みPDF一覧<br>
 	<?php
-	require_once('sqlconnect.php');
+	require_once('db/sqlconnect.php');
 	$pdo = db_connect();
 	$sql = "SELECT * FROM pdf ORDER BY univcode, shikenshu, nendo";
 	$stmt = $pdo->query($sql);
@@ -51,10 +52,12 @@ require_once('session_check.php');
 		<th>大学コード</th>
 		<th>試験種</th>
 		<th>年度</th>
+		<th>大問数</th>
 		<th>変更</th>
 		<th>削除</th>
 		<th>項目登録</th>
 		<th>位置登録</th>
+		<th>試験情報登録</th>
 		<th>登録済件数</th>
 	</tr>
 	<?php
@@ -64,6 +67,7 @@ require_once('session_check.php');
 			<td><?php echo $row['univcode']; ?></td>
 			<td><?php echo $row['shikenshu']; ?></td>
 			<td><?php echo $row['nendo']; ?></td>
+			<td><?php echo $row['daimonsu']; ?></td>
 			<td>
 				<form action="pdfupdate.php" method="post">
 					<input type="submit" value="変更する">
@@ -71,6 +75,7 @@ require_once('session_check.php');
 					<input type="hidden" name="univcode" value="<?=$row['univcode']?>">
 					<input type="hidden" name="shikenshu" value="<?=$row['shikenshu']?>">
 					<input type="hidden" name="nendo" value="<?=$row['nendo']?>">
+					<input type="hidden" name="daimonsu" value="<?=$row['daimonsu']?>">
 					<input type="hidden" name="click" value="pdfupdate">
 				</form>
 			</td>
@@ -96,6 +101,14 @@ require_once('session_check.php');
 					<input type="submit" value="位置を登録する">
 					<input type="hidden" name="id" value="<?=$row['id']?>">
 					<input type="hidden" name="click" value="posreg">
+				</form>
+			</td>
+			<td>
+				<form action="shikendata.php" method="post">
+					<input type="submit" value="試験情報を登録する">
+					<input type="hidden" name="id" value="<?=$row['id']?>">
+					<input type="hidden" name="click" value="shikendata">
+					<input type="hidden" name="daimonsu" value="<?=$row['daimonsu']?>">
 				</form>
 			</td>
 			<td><?php

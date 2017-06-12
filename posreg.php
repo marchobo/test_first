@@ -56,7 +56,7 @@ MathJax.Hub.Config({
 <div id="mathview">
 	セル位置一覧（一行ずつ確定してください）<br>
 	<?php
-	require_once('sqlconnect.php');
+	require_once('db/sqlconnect.php');
 	$pdo = db_connect();
 	$sql = "SELECT * FROM koumoku WHERE pdfid = ? ORDER BY daimon, shomon";
 	$stmt = $pdo->prepare($sql);

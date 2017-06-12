@@ -13,7 +13,7 @@ if ($_POST['token'] != $_SESSION['token']){
 header('X-FRAME-OPTIONS: SAMEORIGIN');
 
 //データベース接続
-require_once("db/userdb.php");
+require_once("../db/userdb.php");
 $dbh = db_connect();
 
 //前後にある半角全角スペースを削除する関数
@@ -29,7 +29,7 @@ function spaceTrim ($str) {
 $errors = array();
 
 if(empty($_POST)) {
-	header("Location: login_form.php");
+	header("Location: login.php");
 	exit();
 }else{
 	//POSTされたデータを各変数に入れる
@@ -65,7 +65,7 @@ if(count($errors) === 0){
 		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		//アカウントで検索
-		$statement = $dbh->prepare("SELECT * FROM member WHERE account=(:account) AND flag =1");
+		$statement = $dbh->prepare("SELECT * FROM examiner WHERE account=(:account)");
 		$statement->bindValue(':account', $account, PDO::PARAM_STR);
 		$statement->execute();
 
@@ -81,7 +81,7 @@ if(count($errors) === 0){
 				session_regenerate_id(true);
 
 				$_SESSION['account'] = $account;
-				header("Location: login_top.php");
+				header("Location: ex_top.php");
 				exit();
 			}else{
 				$errors['password'] = "アカウント及びパスワードが一致しません。";

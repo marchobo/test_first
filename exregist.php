@@ -42,7 +42,7 @@ header('X-FRAME-OPTIONS: SAMEORIGIN');
 	<div id="mathview">
 	登録済み添削者一覧<br>
 	<?php
-	require_once('userdb.php');
+	require_once('db/userdb.php');
 	$pdo = db_connect();
 	$sql = "SELECT * FROM examiner ORDER BY id";
 	$stmt = $pdo->query($sql);

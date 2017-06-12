@@ -10,7 +10,7 @@ else{
 	die('エラー：「項目を登録」をクリックしてください。');
 }
 //ここから
-require_once('sqlconnect.php');
+require_once('db/sqlconnect.php');
 //SQLで検索し、既存のデータではないか確認する
 $pdo = db_connect();
 $sql = "select * from koumoku where pdfid = ? and daimon = ? and shomon = ? and junban = ?";

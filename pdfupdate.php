@@ -35,7 +35,8 @@ else{
 	大学コード:
 	<input type="text" size="5" name="univcode" value="<?= $_POST['univcode']?>" required>	試験種:
 	<input type="text" size="5" name="shikenshu" style="width:30px;" value="<?= $_POST['shikenshu']?>" required>	年度:
-	<input type="text" size="5" name="nendo" value="<?= $_POST['nendo']?>" required>
+	<input type="text" size="5" name="nendo" value="<?= $_POST['nendo']?>" required>	大問数:
+	<input type="text" size="5" name="daimonsu" value="<?= $_POST['daimonsu']?>" required>
 	</div>
 
 	<!--input typeは"file"を設定する-->

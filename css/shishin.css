@@ -1,14 +1,8 @@
-#upload{
+#input{
 	background-color:gainsboro;
-	width:600px;
+	width:400px;
 	border:solid 2px dimgray;
-}
-
-#updata{
-	padding:10px;
-}
-#upfile{
-	padding:10px;
+	padding: 10px;
 }
 
 #inputmathcode{

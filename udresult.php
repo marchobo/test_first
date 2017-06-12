@@ -1,7 +1,7 @@
 <?php
 //データ更新用
 require_once('session_check.php');
-require_once('sqlconnect.php');
+require_once('db/sqlconnect.php');
 $pdo = db_connect();
 // UPDATE文を変数に格納
 $sql = "UPDATE koumoku SET daimon = :daimon, shomon = :shomon, junban = :junban , koumoku = :koumoku, haiten = :haiten, rank = :rank WHERE id = :id";

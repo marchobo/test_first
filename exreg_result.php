@@ -13,7 +13,7 @@ if ($_POST['token'] != $_SESSION['token']){
 header('X-FRAME-OPTIONS: SAMEORIGIN');
 
 //データベース接続
-require_once("userdb.php");
+require_once("db/userdb.php");
 $dbh = db_connect();
 
 //エラーメッセージの初期化

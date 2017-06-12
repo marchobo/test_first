@@ -10,7 +10,7 @@ else{
 	die('エラー：「削除する」をクリックしてください。');
 }
 //データ削除用
-require_once('userdb.php');
+require_once('db/userdb.php');
 $pdo = db_connect();
 //MYSQLでデータベースからPOSTデータを削除
 $st = $pdo -> prepare("DELETE FROM examiner WHERE id = ?");

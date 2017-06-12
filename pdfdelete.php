@@ -10,7 +10,7 @@ else{
 	die('エラー：「削除する」をクリックしてください。');
 }
 //データ削除用(pdf, 項目, pdfposの順)
-require_once('sqlconnect.php');
+require_once('db/sqlconnect.php');
 $pdo = db_connect();
 //MYSQLでデータベースからPOSTデータを削除
 $st = $pdo -> prepare("DELETE FROM pdf WHERE id = ?");

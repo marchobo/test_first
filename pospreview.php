@@ -6,7 +6,7 @@ require_once('lib/tcpdf/tcpdf.php');
 require_once('lib/fpdi/fpdi.php');
 
 //SQLに接続
-require_once('sqlconnect.php');
+require_once('db/sqlconnect.php');
 $pdo = db_connect();
 $sql = "select * from pdf where id = ?";
 $st = $pdo -> prepare($sql);

@@ -11,7 +11,7 @@ else{
 }
 //ここから
 
-require_once('sqlconnect.php');
+require_once('db/sqlconnect.php');
 $pdo = db_connect();
 //MYSQLでデータベースにPOSTデータを登録
 if($_POST['flag']){

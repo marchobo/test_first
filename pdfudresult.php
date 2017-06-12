@@ -1,7 +1,7 @@
 <?php
 //データ更新用
 require_once('session_check.php');
-require_once('sqlconnect.php');
+require_once('db/sqlconnect.php');
 
 // ファイルの保存先
 $uploadfile = 'templates/'.$_POST['univcode'].$_POST['shikenshu'].$_POST['nendo'].'.pdf';
@@ -23,11 +23,11 @@ move_uploaded_file($_FILES['upload']['tmp_name'], $uploadfile);
 //ここからSQL
 $pdo = db_connect();
 // UPDATE文を変数に格納(pdf,項目の順)
-$sql = "UPDATE pdf SET univcode = ?, shikenshu = ?, nendo = ? WHERE id = ?";
+$sql = "UPDATE pdf SET univcode = ?, shikenshu = ?, nendo = ? ,daimonsu = ? WHERE id = ?";
 // 更新する値と該当のIDは空のまま、SQL実行の準備をする
 $stmt = $pdo->prepare($sql);
 // 更新する値と該当のIDを配列に格納する
-$params = array($_POST['univcode'],$_POST['shikenshu'], $_POST['nendo'], $_POST['id']);
+$params = array($_POST['univcode'],$_POST['shikenshu'], $_POST['nendo'], $_POST['daimonsu'], $_POST['id']);
 // 更新する値と該当のIDが入った変数をexecuteにセットしてSQLを実行
 $stmt->execute($params);
 
@@ -39,7 +39,6 @@ $stmt = $pdo->prepare($sql);
 $params = array($_POST['univcode'],$_POST['shikenshu'], $_POST['nendo'], $_POST['id']);
 // 更新する値と該当のIDが入った変数をexecuteにセットしてSQLを実行
 $stmt->execute($params);
-
 
 //登録後、元の画面に戻る
 header( "Location: upload.php" ) ;

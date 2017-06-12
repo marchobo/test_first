@@ -15,7 +15,7 @@ else{
 }
 //データ更新用
 require_once('session_check.php');
-require_once('sqlconnect.php');
+require_once('db/sqlconnect.php');
 
 // ファイルの保存先
 $uploadfile = 'templates/'.$_POST['univcode'].$_POST['shikenshu'].$_POST['nendo'].'.pdf';
@@ -46,8 +46,8 @@ if ($count != 0){
 	die('登録済みのデータです。');
 }
 //MYSQLでデータベースにPOSTデータを登録
-$st = $pdo -> prepare("INSERT INTO pdf VALUES(?, ?, ?, ?)");
-$st->execute(array(0, $_POST['univcode'],$_POST['shikenshu'], $_POST['nendo']));
+$st = $pdo -> prepare("INSERT INTO pdf VALUES(?, ?, ?, ?, ?)");
+$st->execute(array(0, $_POST['univcode'],$_POST['shikenshu'], $_POST['nendo'], $_POST['daimonsu']));
 
 
 //登録後、元の画面に戻る

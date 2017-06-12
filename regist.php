@@ -61,7 +61,7 @@ MathJax.Hub.Config({
 				}
 			}
 		}
-		require_once('sqlconnect.php');
+		require_once('db/sqlconnect.php');
 		$pdo = db_connect();
 		$sql = "select * from pdf where univcode = ? and shikenshu = ? and nendo = ?";
 		$st = $pdo -> prepare($sql);
@@ -106,7 +106,7 @@ MathJax.Hub.Config({
 	<div id="mathview">
 	登録済み項目<br>
 	<?php
-	require_once('sqlconnect.php');
+	require_once('db/sqlconnect.php');
 	$pdo = db_connect();
 	$sql = "SELECT * FROM koumoku WHERE pdfid = ? ORDER BY daimon, shomon, junban";
 	$stmt = $pdo->prepare($sql);
