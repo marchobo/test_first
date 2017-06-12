@@ -24,9 +24,9 @@ require_once('session_check.php');
 <div id="upload">
 	<div id="updata">
 	大学コード:
-	<input type="text" size="5" name="univcode" required>	試験種:
-	<input type="text" size="5" name="shikenshu" style="width:30px;" required>	年度:
-	<input type="text" size="5" name="nendo" required>
+	<input type="number" style="width:50px;" name="univcode" required>	試験種:
+	<input type="number" style="width:50px;" name="shikenshu" style="width:30px;" required>	年度:
+	<input type="number" style="width:50px;" name="nendo" required>
 	</div>
 
 	<!--input typeは"file"を設定する-->

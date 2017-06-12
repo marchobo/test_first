@@ -84,10 +84,10 @@ MathJax.Hub.Config({
 			入力プレビュー<br>
 			<div id="preview"></div>
 			大問番号：
-			<input type="text" size="4" name="daimon" required>	小問番号：
-			<input type="text" size="4" name="shomon" required>	小問内での順番：
-			<input type="text" size="4" name="junban" required>	配点：
-			<input type="text" size="4" name="haiten" required>	ランク：
+			<input type="number" style="width:50px;" name="daimon" required>	小問番号：
+			<input type="number" style="width:50px;" name="shomon" required>	小問内での順番：
+			<input type="number" style="width:50px;" name="junban" required>	配点：
+			<input type="number" style="width:50px;" name="haiten" required>	ランク：
 			<select  name="rank" required>
 				<option></option>
 				<option value="0">X</option>

@@ -114,10 +114,10 @@ MathJax.Hub.Config({
 				?>
 				<form action="posregresult.php" method="post">
 					<td>
-						<input type="text" name="posx" value="<?php if($flag){echo $posx;}?>" size="10" required>
+						<input type="number" name="posx" value="<?php if($flag){echo $posx;}?>" style="width:100px;" step="0.1" required>
 					</td>
 					<td>
-						<input type="text" name="posy" value="<?php if($flag){echo $posy;}?>" size="10" required>
+						<input type="number" name="posy" value="<?php if($flag){echo $posy;}?>" style="width:100px;" step="0.1" required>
 					</td>
 					<td>
 						<input type="submit" value="確定する">

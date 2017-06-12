@@ -13,7 +13,7 @@ if ($_POST['token'] != $_SESSION['token']){
 header('X-FRAME-OPTIONS: SAMEORIGIN');
 
 //データベース接続
-require_once("db.php");
+require_once("userdb.php");
 $dbh = db_connect();
 
 //前後にある半角全角スペースを削除する関数
@@ -43,8 +43,8 @@ if(empty($_POST)) {
 	//アカウント入力判定
 	if ($account == ''):
 	$errors['account'] = "アカウントが入力されていません。";
-	elseif(mb_strlen($account)>10):
-	$errors['account_length'] = "アカウントは10文字以内で入力して下さい。";
+	elseif(!preg_match('/^[0-9a-zA-Z]{5,30}$/', $account)):
+	$errors['account_length'] = "アカウントは半角英数字の5文字以上30文字以下で入力して下さい。";
 	endif;
 
 	//パスワード入力判定
@@ -81,7 +81,7 @@ if(count($errors) === 0){
 				session_regenerate_id(true);
 
 				$_SESSION['account'] = $account;
-				header("Location: login_admin.php");
+				header("Location: login_top.php");
 				exit();
 			}else{
 				$errors['password'] = "アカウント及びパスワードが一致しません。";

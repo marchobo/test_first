@@ -1,7 +1,7 @@
 <?php
 
 function db_connect(){
-	$dsn = 'mysql:host=localhost;dbname=db_test_1';
+	$dsn = 'mysql:host=localhost;dbname=userdb';
 	$user = 'root';
 	$password = 't873n338';
 
