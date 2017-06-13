@@ -67,7 +67,16 @@ require_once('session_check.php');
 			<td><?php echo $row['univcode']; ?></td>
 			<td><?php echo $row['shikenshu']; ?></td>
 			<td><?php echo $row['nendo']; ?></td>
-			<td><?php echo $row['daimonsu']; ?></td>
+			<td><?php echo $row['daimonsu'];
+			$sql = "select * from shikendata where pdfid = ?";
+			$st = $pdo -> prepare($sql);
+			$st->execute(array($row['id']));
+			$countk = $st->rowCount();
+			if($row['daimonsu'] != $countk){
+				echo "*";
+			}
+
+			?></td>
 			<td>
 				<form action="pdfupdate.php" method="post">
 					<input type="submit" value="変更する">

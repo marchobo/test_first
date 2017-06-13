@@ -54,7 +54,7 @@ MathJax.Hub.Config({
 	<span style="font-size: x-large">復習の指針PDFセル位置設定</span>
 </div>
 <div id="mathview">
-	セル位置一覧（一行ずつ確定してください）<br>
+	セル位置一覧<br>
 	<?php
 	require_once('db/sqlconnect.php');
 	$pdo = db_connect();
@@ -62,6 +62,8 @@ MathJax.Hub.Config({
 	$stmt = $pdo->prepare($sql);
 	$stmt->execute(array($_SESSION['pdfid']));
 	?>
+
+	<form action="posregresult.php" method="post">
 	<table id="hv_table">
 	<tr>
 		<th>大問</th>
@@ -72,69 +74,75 @@ MathJax.Hub.Config({
 		<th>ランク</th>
 		<th>位置X</th>
 		<th>位置Y</th>
-		<th>確定</th>
 	</tr>
 	<?php
 		foreach ($stmt as $row) {
-		?>
-			<tr>
-				<td><?php echo $row['daimon']; ?></td>
-				<td><?php echo $row['shomon']; ?></td>
-				<td><?php echo $row['junban']; ?></td>
-				<td id ="koumoku"><?php echo $row['koumoku']; ?></td>
-				<td><?php echo $row['haiten']; ?></td>
-				<td><?php
-				switch($row['rank']){
-					case 0:
-						echo "X";
-						break;
-					case 1:
-						echo "A";
-						break;
-					case 2:
-						echo "B";
-						break;
-				}?></td>
-				<?php
-				//posx,posyデータがあれば取得
-				$flag = 0;//データが既にあったかどうか
-				$posx=null;
-				$posy=null;
-				$sql = "SELECT * FROM pdfpos WHERE id = ?";
-				$stmt = $pdo->prepare($sql);
-				$stmt->execute(array($row['id']));
-				$count = $stmt->rowCount();
-				if ($count != 0){
-					$flag = 1;
-					foreach($stmt as $row2){
-						$posx = $row2['posx'];
-						$posy = $row2['posy'];
-					}
-				}
-				?>
-				<form action="posregresult.php" method="post">
-					<td>
-						<input type="number" name="posx" value="<?php if($flag){echo $posx;}?>" style="width:100px;" step="0.1" required>
-					</td>
-					<td>
-						<input type="number" name="posy" value="<?php if($flag){echo $posy;}?>" style="width:100px;" step="0.1" required>
-					</td>
-					<td>
-						<input type="submit" value="確定する">
-						<input type="hidden" name="click" value="posreg">
-						<input type="hidden" name="id" value="<?=$row['id']?>">
-						<input type="hidden" name="flag" value="<?=$flag ?>">
-						<input type="hidden" name="pdfid" value="<?=$_SESSION['pdfid'] ?>">
-					</td>
-				</form>
-			</tr>
+	?>
+	<tr>
+		<td><?php echo $row['daimon']; ?></td>
+		<td><?php echo $row['shomon']; ?></td>
+		<td><?php echo $row['junban']; ?></td>
+		<td id ="koumoku"><?php echo $row['koumoku']; ?></td>
+		<td><?php echo $row['haiten']; ?></td>
+		<td><?php
+		switch($row['rank']){
+			case 0:
+				echo "X";
+				break;
+			case 1:
+				echo "A";
+				break;
+			case 2:
+				echo "B";
+				break;
+		}?></td>
 		<?php
+		//posx,posyデータがあれば取得
+		$flag = 0;//データが既にあったかどうか
+		$posx=null;
+		$posy=null;
+		$sql = "SELECT * FROM pdfpos WHERE id = ?";
+		$stmt = $pdo->prepare($sql);
+		$stmt->execute(array($row['id']));
+		$count = $stmt->rowCount();
+		if ($count != 0){
+			$flag = 1;
+			foreach($stmt as $row2){
+				$posx = $row2['posx'];
+				$posy = $row2['posy'];
+			}
 		}
 		?>
+
+		<td>
+			<input type="number" name="posx[]" value="<?php if($flag){echo $posx;}?>" style="width:100px;" step="0.1" required>
+		</td>
+		<td>
+			<input type="number" name="posy[]" value="<?php if($flag){echo $posy;}?>" style="width:100px;" step="0.1" required>
+		</td>
+	</tr>
+	<input type="hidden" name="id[]" value="<?=$row['id']?>">
+	<input type="hidden" name="flag[]" value="<?=$flag ?>">
+
+	<?php
+	}
+	?>
 	</table>
 	</div>
-	<form action="pospreview.php" method="post">
-		<input type="submit" value="プレビューをダウンロード">
-	</form>
+	<table>
+		<tr>
+			<td>
+				<input type="submit" value="確定する">
+				<input type="hidden" name="click" value="posreg">
+				<input type="hidden" name="pdfid" value="<?=$_SESSION['pdfid'] ?>">
+			</form>
+			</td>
+			<td>
+				<form action="pospreview.php" method="post">
+					<input type="submit" value="プレビューをダウンロード">
+				</form>
+			<td>
+		</tr>
+	</table>
 </body>
 </html>

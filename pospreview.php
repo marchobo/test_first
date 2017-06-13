@@ -53,7 +53,7 @@ foreach($st as $row){
 //出力前にクリーンにしないとエラー出る
 ob_end_clean();
 //セッションを設定
-$_SESSION['click']!='posreg';
+$_SESSION['click']='posreg';
 
 //PDFをブラウザに出力する
 $pdf->Output('preview_'.$univcode.$shikenshu.$nendo.'.pdf', "D");
