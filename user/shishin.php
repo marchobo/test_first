@@ -9,18 +9,18 @@ $token = $_SESSION['token'];
 <html lang="ja">
 <head>
 <link rel="stylesheet" type="text/css" href="../css/menu.css">
-<link rel="stylesheet" type="text/css" href="../css/shishin.css">
+<link rel="stylesheet" type="text/css" href="../css/main.css">
 <meta charset="utf-8">
 <title>情報入力</title>
 </head>
 
 <body>
 <?php include('menu.html');?>
-<div id="inputmathcode">
-	<span style="font-size: x-large">復習の指針情報入力</span>
+<div class="top_title">
+	<span>復習の指針情報入力</span>
 </div>
 
-<div id="input">
+<div class="input_data">
 <form method="post" action="shishin_input.php">
 <p>スタッフID（例 N0123456）:<input type="text" style="width:150px;" name="exid" pattern="N0+\d{6}" required></p>
 <p>PDF名（18桁）:<input type="text" style="width:250px;" name="pdfname" pattern="0+\d{17}" required></p>

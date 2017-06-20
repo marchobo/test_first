@@ -12,7 +12,7 @@ $token = $_SESSION['token'];
 <html lang="ja">
 <head>
 <link rel="stylesheet" type="text/css" href="../css/menu.css">
-<link rel="stylesheet" type="text/css" href="../css/shishin_input.css">
+<link rel="stylesheet" type="text/css" href="../css/main.css">
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   tex2jax: {
@@ -48,6 +48,7 @@ $nendo_sub = substr($_POST['pdfname'],8,2);
 $nendo = '20'.$nendo_sub;
 $stuid = substr($_POST['pdfname'],10,8);
 $kaisu = $_POST['kaisu'];
+$hanigai = 0;
 
 //大学コードがなければエラー
 $sql = "select * from univname where univcode = ?";
@@ -65,14 +66,16 @@ foreach($st as $row){
 	$univname = $row['univname'];
 }
 ?>
-<div id="inputmathcode">
-	<span style="font-size: x-large">復習の指針点数入力</span>
+<div class="top_title">
+	<span>復習の指針点数入力</span>
 </div>
-<div id="inputdata">
-	<p>ID:<?= $exid?>	生徒番号:<?= $stuid?>	〈<?= $univname?><?= $nendo?>年度	数学<?php if($shikenshu_sub){echo $shikenshu_sub;}?>	<?= $kaisu?>回目〉</p>
-	大問得点入力<br>
+<div class="input_data">
+ID:<?= $exid?>	生徒番号:<?= $stuid?>	〈<?= $univname?><?= $nendo?>年度	数学<?php if($shikenshu_sub){echo $shikenshu_sub;}?>	<?= $kaisu?>回目〉
+</div>
+<div>
+	<div class="content_title">大問得点入力</div>
 	<form action="shishin_result.php" method="post">
-	<table id="daimon_table">
+	<table class="main_table">
 	<tr>
 	<?php
 	$pdo = db_connect();
@@ -102,9 +105,12 @@ foreach($st as $row){
 		echo '/'.$row['manten'];
 		}
 		else{
-			echo $row['manten'].'/'.$row['manten'];?>
+			echo $row['manten'].'/'.$row['manten'];
+			$hanigai += $row['manten'];
+			?>
 			<input type="hidden" name="daimon[<?=$row['daimon']?>]" value="<?=$row['manten']?>">
 		<?php }?>
+		<input type="hidden" name="hanigai" value="<?=$hanigai?>">
 		</td>
 	<?php
 	}
@@ -121,7 +127,7 @@ foreach($st as $row){
 	<hr />
 
 	復習の指針入力<br>
-	<table id="hukushu_table">
+	<table class="main_table">
 	<?php
 
 	$pdo = db_connect();
@@ -132,7 +138,7 @@ foreach($st as $row){
 	<tr>
 		<th>大問</th>
 		<th>小問</th>
-		<th>項目</th>
+		<th>加点要素</th>
 		<th>配点</th>
 		<th>ランク</th>
 		<th>取りこぼし</th>
@@ -142,8 +148,8 @@ foreach($st as $row){
 	?>
 		<tr>
 			<td><?php echo $row['daimon']; ?></td>
-			<td><?php echo $row['shomon']; ?></td>
-			<td id ="koumoku"><?php echo $row['koumoku']; ?></td>
+			<td><?php if($row['shomon']){echo '('.$row['shomon'].')';} ?></td>
+			<td class ="koumoku"><?php echo $row['koumoku']; ?></td>
 			<td><?php echo $row['haiten']; ?></td>
 			<td><?php
 			switch($row['rank']){

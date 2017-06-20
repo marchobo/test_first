@@ -9,7 +9,7 @@ $_SESSION['nendo']='';
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<link rel="stylesheet" type="text/css" href="css/regist.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <link rel="stylesheet" type="text/css" href="css/menu.css">
 
 <meta charset="UTF-8">
@@ -17,8 +17,8 @@ $_SESSION['nendo']='';
 </head>
 <body>
 	<?php include('menu.html');?>
-	<div id="inputmathcode">
-		<span style="font-size: x-large">復習の指針管理システムへようこそ！</span>
+	<div class="top_title">
+		<span>復習の指針管理システムへようこそ！</span>
 	</div>
 </body>
 </html>

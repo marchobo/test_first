@@ -108,7 +108,9 @@ if(count($errors) === 0){
 <meta charset="utf-8">
 </head>
 <body>
-<h1>ログイン確認画面</h1>
+<div class="top_title">
+	<span>ログイン確認画面</span>
+</div>
 
 <?php if(count($errors) > 0): ?>
 

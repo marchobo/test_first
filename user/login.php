@@ -16,13 +16,14 @@ header('X-FRAME-OPTIONS: SAMEORIGIN');
 <head>
 <title>ログイン画面</title>
 <meta charset="utf-8">
-<link rel="stylesheet" type="text/css" href="login.css">
+<link rel="stylesheet" type="text/css" href="../css/main.css">
 </head>
 <body>
 
-<div class="content">
-<span style="font-size:x-large">復習の指針出力システム</span>
-
+<div class="top_title">
+	<span>復習の指針出力システム</span>
+</div>
+<div>
 <form action="login_check.php" method="post">
 
 <table>

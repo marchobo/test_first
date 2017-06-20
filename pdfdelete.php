@@ -19,7 +19,8 @@ $st = $pdo -> prepare("DELETE FROM koumoku WHERE pdfid = ?");
 $st->execute(array($_POST['id']));
 $st = $pdo -> prepare("DELETE FROM pdfpos WHERE pdfid = ?");
 $st->execute(array($_POST['id']));
-
+$st = $pdo -> prepare("DELETE FROM shikendata WHERE pdfid = ?");
+$st->execute(array($_POST['id']));
 
 //登録後、元の画面に戻る
 header( "Location: upload.php") ;

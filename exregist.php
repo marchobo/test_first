@@ -18,36 +18,38 @@ header('X-FRAME-OPTIONS: SAMEORIGIN');
 <head>
 <title>添削者登録画面</title>
 <link rel="stylesheet" type="text/css" href="css/menu.css">
-<link rel="stylesheet" type="text/css" href="css/regist.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <script src="js/checkfunc.js"></script>
 <meta charset="utf-8">
 </head>
 <body>
 <?php include('menu.html');?>
-<div id="inputmathcode">
-	<span style="font-size: x-large">添削者登録画面</span>
+<div class="top_title">
+	<span>添削者登録画面</span>
 </div>
+<div class="input_data">
+	<form action="exreg_result.php" method="post">
 
-<form action="exreg_result.php" method="post">
+	<p>アカウント名：<input type="text" name="account"></p>
+	<p>パスワード：<input type="password" name="password"></p>
+	<p>備考：<input type="text" name="bikou"></p>
 
-<p>アカウント名：<input type="text" name="account"></p>
-<p>パスワード：<input type="password" name="password"></p>
-<p>備考：<input type="text" name="bikou"></p>
-
-<input type="hidden" name="token" value="<?=$token?>">
-<input type="submit" value="登録する">
-
-</form>
+	<input type="hidden" name="token" value="<?=$token?>">
+	<input type="submit" value="登録する">
+	</form>
+</div>
 <hr />
-	<div id="mathview">
-	登録済み添削者一覧<br>
+<div class="content_title">
+登録済み添削者一覧
+</div>
+<div>
 	<?php
 	require_once('db/userdb.php');
 	$pdo = db_connect();
 	$sql = "SELECT * FROM examiner ORDER BY id";
 	$stmt = $pdo->query($sql);
 	?>
-	<table id="hv_table">
+	<table class="main_table">
 	<tr>
 		<th>id</th>
 		<th>ユーザー名</th>
@@ -73,6 +75,6 @@ header('X-FRAME-OPTIONS: SAMEORIGIN');
 	}
 	?>
 	</table>
-	</div>
+</div>
 </body>
 </html>

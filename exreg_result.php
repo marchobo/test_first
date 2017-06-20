@@ -64,15 +64,15 @@ try{
 <head>
 <title>添削者登録完了</title>
 <link rel="stylesheet" type="text/css" href="css/menu.css">
-<link rel="stylesheet" type="text/css" href="css/regist.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <meta charset="utf-8">
 </head>
 <body>
 <?php include('menu.html');?>
 
 <?php if (count($errors) === 0): ?>
-<div id="inputmathcode">
-	<span style="font-size: x-large">添削者登録完了</span>
+<div class="top_title">
+	<span>添削者登録完了</span>
 </div>
 
 <p>登録完了いたしました。</p>

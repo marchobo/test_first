@@ -25,7 +25,7 @@ else{
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<link rel="stylesheet" type="text/css" href="css/regist.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <link rel="stylesheet" type="text/css" href="css/menu.css">
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -76,12 +76,14 @@ MathJax.Hub.Config({
 			$pdfid = $row['id'];
 		}
 	?>
-	<div id="inputmathcode">
-		<span style="font-size:x-large">復習の指針項目登録（<?= $_SESSION['univcode'].'/'.$_SESSION['shikenshu'].'/'.$_SESSION['nendo']?>）</span>
+	<div class="top_title">
+		<span>復習の指針項目登録（<?= $_SESSION['univcode'].'/'.$_SESSION['shikenshu'].'/'.$_SESSION['nendo']?>）</span>
+	</div>
+	<div>
+		<div class="content_title">項目のコード入力（行内で複数行の数式を書く場合：\displaystyle）</div>
 		<form method="post" action="result.php">
-			項目のコード入力（行内で複数行の数式を書く場合：\displaystyle）<br>
 			<textarea name="mathcode" id="mathcode" rows="2" cols="100" wrap="soft" required></textarea><br>
-			入力プレビュー<br>
+			<div class="content_title">入力プレビュー</div>
 			<div id="preview"></div>
 			大問番号：
 			<input type="number" style="width:50px;" name="daimon" required>	小問番号：
@@ -103,8 +105,7 @@ MathJax.Hub.Config({
 		</form>
 	</div>
 	<hr />
-	<div id="mathview">
-	登録済み項目<br>
+	<div class="content_title">登録済み項目</div>
 	<?php
 	require_once('db/sqlconnect.php');
 	$pdo = db_connect();
@@ -112,7 +113,7 @@ MathJax.Hub.Config({
 	$stmt = $pdo->prepare($sql);
 	$stmt->execute(array($pdfid));
 	?>
-	<table id="hv_table">
+	<table class="main_table">
 	<tr>
 		<th>大問</th>
 		<th>小問</th>
@@ -130,7 +131,7 @@ MathJax.Hub.Config({
 			<td><?php echo $row['daimon']; ?></td>
 			<td><?php echo $row['shomon']; ?></td>
 			<td><?php echo $row['junban']; ?></td>
-			<td id ="koumoku"><?php echo $row['koumoku']; ?></td>
+			<td class ="koumoku"><?php echo $row['koumoku']; ?></td>
 			<td><?php echo $row['haiten']; ?></td>
 			<td><?php
 			switch($row['rank']){

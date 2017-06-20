@@ -33,7 +33,7 @@ else{
 <html lang="ja">
 <head>
 <link rel="stylesheet" type="text/css" href="css/menu.css">
-<link rel="stylesheet" type="text/css" href="css/regist.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <meta charset="utf-8">
 <title>試験情報登録</title>
 <script src="js/checkfunc.js"></script>
@@ -41,16 +41,18 @@ else{
 
 <body>
 <?php include('menu.html');?>
-<div id="inputmathcode">
-	<span style="font-size: x-large">試験情報登録</span>
+<div class="top_title">
+	<span>試験情報登録</span>
 </div>
-<div id="mathview">
-	満点・解答可否（可:1 否:0）を登録してください。<br>
+<div class="content_title">
+	満点・解答可否（可:1 否:0）を登録してください。
+</div>
+<div>
 	<?php
 	require_once('db/sqlconnect.php');
 	$pdo = db_connect();
 	?>
-	<table id="hv_table">
+	<table class="main_table">
 	<tr>
 		<th>大問</th>
 		<th>満点</th>

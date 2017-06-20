@@ -1,0 +1,47 @@
+#preview{
+	background-color:Azure;
+	width:800px;
+	min-height: 25px;
+	border:dashed 1px Blue;
+	font-size: large;
+	color: blue;
+}
+
+#mathcode{
+	width:800px;
+	height:40px;
+}
+
+.top_title{
+	padding:10px;
+	font-size: x-large
+}
+
+.content_title{
+	padding:10px;
+	font-size: large
+}
+
+.main_table{
+	border-collapse: collapse;
+}
+
+.main_table td, th{
+	border: solid 1px;
+	text-align: center;
+}
+
+td.koumoku{
+	text-align: left;
+}
+
+.input_data{
+	padding:10px;
+	background-color:gainsboro;
+	border:solid 2px dimgray;
+	display: inline-block;
+}
+
+.inner_content{
+	padding:10px;
+}

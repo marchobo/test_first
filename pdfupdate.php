@@ -14,24 +14,23 @@ else{
 <!doctype html>
 <html lang="ja">
 <head>
-<link rel="stylesheet" type="text/css" href="css/upload.css">
 <link rel="stylesheet" type="text/css" href="css/menu.css">
-<link rel="stylesheet" type="text/css" href="css/regist.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <meta charset="utf-8">
-<title>PDFアップロード</title>
+<title>PDF変更</title>
 <script src="js/checkfunc.js"></script>
 </head>
 
 <body>
 <?php include('menu.html');?>
-<div id="inputmathcode">
-	<span style="font-size: x-large">復習の指針PDFアップロード</span>
+<div class="top_title">
+	<span>復習の指針PDF変更画面</span>
 </div>
 
 <!--formのenctypeに"multipart/form-data"を設定する-->
 <form action="pdfudresult.php" method="post" enctype="multipart/form-data">
-<div id="upload">
-	<div id="updata">
+<div class="input_data">
+	<div class="inner_content">
 	大学コード:
 	<input type="text" size="5" name="univcode" value="<?= $_POST['univcode']?>" required>	試験種:
 	<input type="text" size="5" name="shikenshu" style="width:30px;" value="<?= $_POST['shikenshu']?>" required>	年度:
@@ -40,7 +39,7 @@ else{
 	</div>
 
 	<!--input typeは"file"を設定する-->
-	<div id="upfile">
+	<div class="inner_content">
 	<input type="file" name="upload">
 	<input type="hidden" name="click" value="upload">
 	<input type="hidden" name="id" value="<?=$_POST['id']?>">

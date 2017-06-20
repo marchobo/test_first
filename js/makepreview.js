@@ -1,4 +1,5 @@
 //即時関数
+//id mathcodeに書いたコードを、id previewに表示する関数
 $(function() {
 	function makePreview() {
 		input = $('#mathcode').val().replace(/</g, "&lt;").replace(/>/g, "&gt;");

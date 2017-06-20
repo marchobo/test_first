@@ -5,9 +5,8 @@ require_once('session_check.php');
 <!doctype html>
 <html lang="ja">
 <head>
-<link rel="stylesheet" type="text/css" href="css/upload.css">
 <link rel="stylesheet" type="text/css" href="css/menu.css">
-<link rel="stylesheet" type="text/css" href="css/regist.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <meta charset="utf-8">
 <title>PDFアップロード</title>
 <script src="js/checkfunc.js"></script>
@@ -15,14 +14,14 @@ require_once('session_check.php');
 
 <body>
 <?php include('menu.html');?>
-<div id="inputmathcode">
-	<span style="font-size: x-large">復習の指針PDFアップロード</span>
+<div class="top_title">
+	<span>復習の指針PDFアップロード</span>
 </div>
 
 <!--formのenctypeに"multipart/form-data"を設定する-->
 <form action="upresult.php" method="post" enctype="multipart/form-data">
-<div id="upload">
-	<div id="updata">
+<div class="input_data">
+	<div class="inner_content">
 	大学コード:
 	<input type="number" style="width:50px;" name="univcode" required>	試験種:
 	<input type="number" style="width:50px;" name="shikenshu" style="width:30px;" required>	年度:
@@ -31,7 +30,7 @@ require_once('session_check.php');
 	</div>
 
 	<!--input typeは"file"を設定する-->
-	<div id="upfile">
+	<div class="inner_content">
 	<input type="file" name="upload">
 	<input type="hidden" name="click" value="upload">
 	<input type="submit" value="アップロード">
@@ -39,15 +38,17 @@ require_once('session_check.php');
 </div>
 </form>
 <hr />
-	<div id="mathview">
-	登録済みPDF一覧<br>
+	<div class="content_title">
+		<span>登録済みPDF一覧</span>
+	</div>
 	<?php
 	require_once('db/sqlconnect.php');
 	$pdo = db_connect();
 	$sql = "SELECT * FROM pdf ORDER BY univcode, shikenshu, nendo";
 	$stmt = $pdo->query($sql);
 	?>
-	<table id="hv_table">
+	<div>
+	<table class="main_table">
 	<tr>
 		<th>大学コード</th>
 		<th>試験種</th>
@@ -55,10 +56,12 @@ require_once('session_check.php');
 		<th>大問数</th>
 		<th>変更</th>
 		<th>削除</th>
-		<th>項目登録</th>
+		<th>加点要素登録</th>
 		<th>位置登録</th>
 		<th>試験情報登録</th>
-		<th>登録済件数</th>
+		<th>登録済（加点要素）</th>
+		<th>登録済（他項目）</th>
+		<th>登録済（画像）</th>
 	</tr>
 	<?php
 	foreach ($stmt as $row) {
@@ -126,6 +129,36 @@ require_once('session_check.php');
 			$st->execute(array($row['id']));
 			$countk = $st->rowCount();
 			$sql = "select * from pdfpos where pdfid = ?";
+			$st = $pdo -> prepare($sql);
+			$st->execute(array($row['id']));
+			$countp = $st->rowCount();
+			echo $countp.'/'.$countk;
+			if($countk!=0){
+				if($countp==$countk){
+					echo '(完了)';
+				}
+			}
+			?></td>
+			<td><?php
+			$sql = "select * from subitem";
+			$st = $pdo -> query($sql);
+			$countk = $st->rowCount();
+			$sql = "select * from pdfpos_sub where pdfid = ?";
+			$st = $pdo -> prepare($sql);
+			$st->execute(array($row['id']));
+			$countp = $st->rowCount();
+			echo $countp.'/'.$countk;
+			if($countk!=0){
+				if($countp==$countk){
+					echo '(完了)';
+				}
+			}
+			?></td>
+			<td><?php
+			$sql = "select * from imgitem";
+			$st = $pdo -> query($sql);
+			$countk = $st->rowCount();
+			$sql = "select * from pdfpos_img where pdfid = ?";
 			$st = $pdo -> prepare($sql);
 			$st->execute(array($row['id']));
 			$countp = $st->rowCount();

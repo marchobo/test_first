@@ -1,0 +1,6 @@
+DirectoryIndex login_form.php
+Options -Indexes
+<Files ~ "^\.ht">
+deny from all
+</Files>
+

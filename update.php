@@ -13,7 +13,7 @@ else{
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<link rel="stylesheet" type="text/css" href="css/update.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <link rel="stylesheet" type="text/css" href="css/menu.css">
 
 <script type="text/x-mathjax-config">
@@ -36,10 +36,14 @@ MathJax.Hub.Config({
 </head>
 <body>
 	<?php include('menu.html');?>
-	<div id="inputmathcode">
-		<span style="font-size:x-large">復習の指針項目変更</span>
+	<div class="top_title">
+		<span>復習の指針項目変更</span>
+	</div>
+	<div>
 		<form method="post" action="udresult.php">
-			項目のコード入力（行内で複数行の数式を書く場合：\displaystyle）<br>
+			<div class="content_title">
+				項目のコード入力（行内で複数行の数式を書く場合：\displaystyle）
+			</div>
 			<textarea name="mathcode" id="mathcode" rows="2" cols="100" wrap="soft" required><?= $_POST['koumoku']?></textarea><br>
 			入力プレビュー<br>
 			<div id="preview"></div>

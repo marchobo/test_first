@@ -15,31 +15,32 @@ header('X-FRAME-OPTIONS: SAMEORIGIN');
 <html lang="ja">
 <head>
 <title>ログイン画面</title>
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <meta charset="utf-8">
-<link rel="stylesheet" type="text/css" href="login.css">
 </head>
 <body>
+<div class="top_title">
+	<span>復習の指針管理システム</span>
+</div>
 
-<div class="content">
-<span style="font-size:x-large">復習の指針管理システム</span>
+<div>
+	<form action="login_check.php" method="post">
 
-<form action="login_check.php" method="post">
+	<table>
+		<tr>
+			<td>ID：</td>
+			<td><input type="text" name="account" size="30"></td>
+		</tr>
+		<tr>
+			<td>パスワード：</td>
+			<td><input type="password" name="password" size="30"></td>
+		</tr>
+	</table>
 
-<table>
-	<tr>
-		<td>ID：</td>
-		<td><input type="text" name="account" size="30"></td>
-	</tr>
-	<tr>
-		<td>パスワード：</td>
-		<td><input type="password" name="password" size="30"></td>
-	</tr>
-</table>
+	<input type="hidden" name="token" value="<?=$token?>">
+	<input type="submit" value="ログインする">
 
-<input type="hidden" name="token" value="<?=$token?>">
-<input type="submit" value="ログインする">
-
-</form>
+	</form>
 </div>
 </body>
 </html>
