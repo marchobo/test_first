@@ -41,6 +41,7 @@ $pdf -> SetTextColor(220, 20, 60);
 $koboshis = $_POST['koboshi'];
 //合計点算出
 $daimons = $_POST['daimon'];
+$goukeiten = 0;
 foreach($daimons as $daimontokuten){
 	$goukeiten += $daimontokuten;
 }
