@@ -144,29 +144,54 @@ ID:<?= $exid?>	生徒番号:<?= $stuid?>	〈<?= $univname?><?= $nendo?>年度	�
 		<th>取りこぼし</th>
 	</tr>
 	<?php
+	//前行の大問・小問番号保存用
+	$d = -1;
+	$d_num=0;//大問の加点要素の個数
+	$d_change = 0;//大問が変わったフラグ
+	$s = -1;
+	$s_num=0;//小問の加点要素の個数
 	foreach ($stmt as $row) {
 	?>
 		<tr>
-			<td><?php echo $row['daimon']; ?></td>
-			<td><?php if($row['shomon']){echo '('.$row['shomon'].')';} ?></td>
-			<td class ="koumoku"><?php echo $row['koumoku']; ?></td>
-			<td><?php echo $row['haiten']; ?></td>
-			<td><?php
-			switch($row['rank']){
-				case 0:
-					echo "X";
-					break;
-				case 1:
-					echo "A";
-					break;
-				case 2:
-					echo "B";
-					break;
-			}?></td>
-			<td><input type="number" style="width:60px;" name="koboshi[<?=$row['id']?>]" min="0" max="<?=$row['haiten']?>" required>/<?=$row['haiten']?></td>
-
-			</tr>
+		<?php if($row['daimon']!=$d){
+			//大問番号ごとに、セルを結合する
+			$d_change = 1;
+			$d=$row['daimon'];
+			$sql_tmp = "SELECT * FROM koumoku WHERE pdfid = ? and daimon = ?";
+			$stmt_tmp = $pdo->prepare($sql_tmp);
+			$stmt_tmp->execute(array($pdfid, $d));
+			$d_num = $stmt_tmp->rowCount();?>
+			<td rowspan="<?=$d_num?>"><?=$d; ?></td>
+		<?php
+		}?>
+		<?php if($row['shomon'] != $s||$d_change != 0){
+			//小問番号ごとに、セルを結合する
+			$s = $row['shomon'];
+			$sql_tmp = "SELECT * FROM koumoku WHERE pdfid = ? and daimon = ? and shomon = ?";
+			$stmt_tmp = $pdo->prepare($sql_tmp);
+			$stmt_tmp->execute(array($pdfid, $d, $s));
+			$s_num = $stmt_tmp->rowCount();?>
+			<td rowspan="<?=$s_num?>"><?php if($s){echo '('.$s.')';} ?></td>
+		<?php
+		}?>
+		<td class ="koumoku"><?php echo $row['koumoku']; ?></td>
+		<td><?php echo $row['haiten']; ?></td>
+		<td><?php
+		switch($row['rank']){
+			case 0:
+				echo "X";
+				break;
+			case 1:
+				echo "A";
+				break;
+			case 2:
+				echo "B";
+				break;
+		}?></td>
+		<td><input type="number" style="width:60px;" name="koboshi[<?=$row['id']?>]" min="0" max="<?=$row['haiten']?>" required>/<?=$row['haiten']?></td>
+		</tr>
 	<?php
+	$d_change = 0;//戻しておく
 	}
 	?>
 	</table>

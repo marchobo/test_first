@@ -14,6 +14,11 @@ if ($_POST['token'] != $_SESSION['token']){
 $pdf = new FPDI();
 //フォントのインスタンス化
 $font = new TCPDF_FONTS();
+//花鳥風月の設定(初回のみ)
+//$font_path1 = '../lib/tcpdf/fonts/kacho/kacho-regular.ttf';
+//$font_path2 = '../lib/tcpdf/fonts/kacho/kacho-bold.ttf';
+//$kachor = $font->addTTFfont($font_path1);
+//$kachob = $font->addTTFfont($font_path2);
 //余白の設定
 $pdf -> SetMargins(0,0,0);
 //自動改ページをしない
@@ -24,7 +29,7 @@ $pdf -> setPrintFooter(false);
 //1ページ目を作成
 $pdf -> AddPage();
 //フォントの設定
-$pdf -> SetFont('times', '', 14);
+$pdf -> SetFont('kacho', '', 14);
 //既存のPDFをテンプレートとして読み込む
 $pdfpath = '../templates/'.$_POST['univcode'].$_POST['shikenshu'].$_POST['nendo'].'.pdf';
 $pdf -> setSourceFile($pdfpath);
@@ -191,7 +196,7 @@ try{
 		//名称とitemsのキーが一致する場合に印字する
 		foreach($items as $key => $value){
 			if($key == $name){
-				$pdf -> SetFont('kozgopromedium', '', $size);
+				$pdf -> SetFont('kachob', '', $size);
 
 				$pdf -> Text($posx,$posy,$value);
 			}
