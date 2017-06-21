@@ -57,7 +57,7 @@ foreach($st as $row){
 
 //その他項目について、文字を書き込む
 //テキスト色の設定
-$pdf -> SetTextColor(10, 10, 220);
+$pdf -> SetTextColor(220, 20, 60);
 $sql = "select * from pdfpos_sub where pdfid = ?";
 $st = $pdo -> prepare($sql);
 $st->execute(array($_SESSION['pdfid']));

@@ -111,9 +111,14 @@ try{
 			}
 		}
 		//ここでデータ挿入
-		$sql = "INSERT INTO hsdata VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())";
+		$pdo->query("set time_zone = '+09:00'");
+		$st = $pdo->query("SELECT now()");//現在時刻を求めておく
+		foreach($st as $key => $value){
+			$now = $value[0];
+		}
+		$sql = "INSERT INTO hsdata VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$st = $pdo -> prepare($sql);
-		$st->execute(array(0, $touanid, $_SESSION['account'], $_POST['exid'], $_POST['stuid'], $_POST['koza'], $_POST['univcode'], $_POST['shikenshu'], $_POST['nendo'], $_POST['kaisu'], $daimon, $shomon, $junban, $haiten, $rank, $koboshi));
+		$st->execute(array(0, $touanid, $_SESSION['account'], $_POST['exid'], $_POST['stuid'], $_POST['koza'], $_POST['univcode'], $_POST['shikenshu'], $_POST['nendo'], $_POST['kaisu'], $daimon, $shomon, $junban, $haiten, $rank, $koboshi, $now));
 	}
 	//「～が取れれば」を求める
 	$items['xpoints']= $goukeiten - $hanigai + $items['xall'];
@@ -125,7 +130,7 @@ try{
 	$st = $pdo -> prepare($sql);
 	$st->execute(array($_POST['univcode'], $_POST['shikenshu'], $_POST['nendo'], $goukeiten));
 	foreach($st as $row){
-		$items['devvalue']='偏差値：　'.$row['devval'];
+		$items['devvalue']='偏差値：　'.round($row['devval'],1);
 	}
 
 	//既存テンプレートに文字を書き込む
@@ -168,13 +173,13 @@ try{
 			if($key == $name){
 				$pdf -> Image($paths[$name], $posx,$posy,$width,$height);
 				$pdf->SetLineWidth(0.3);
-				$pdf->SetDrawColor(10, 10, 220);
-				$pdf -> Rect($posx,$posy,$width,$height, 'D');
+				//$pdf->SetDrawColor(220, 20, 60);
+				//$pdf -> Rect($posx,$posy,$width,$height, 'D');
 			}
 		}
 	}
 	//テキスト色の設定
-	$pdf -> SetTextColor(10, 10, 220);
+	$pdf -> SetTextColor(220, 20, 60);
 	//既存テンプレートに取りこぼし合計点等を書き込む
 	$name=null;
 	$size=null;
