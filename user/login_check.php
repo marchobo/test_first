@@ -80,7 +80,7 @@ if(count($errors) === 0){
 				//セッションハイジャック対策
 				session_regenerate_id(true);
 
-				$_SESSION['account'] = $account;
+				$_SESSION['account_ex'] = $account;
 				header("Location: ex_top.php");
 				exit();
 			}else{

@@ -4,7 +4,7 @@ session_start();
 header("Content-type: text/html; charset=utf-8");
 
 // ログイン状態のチェック
-if (!isset($_SESSION["account"])) {
+if (!isset($_SESSION["account_ex"])) {
 	header("Location: login_form.php");
 	exit();
 }
