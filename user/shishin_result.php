@@ -9,6 +9,11 @@ if ($_POST['token'] != $_SESSION['token']){
 	echo "不正アクセスの可能性あり";
 	exit();
 }
+
+//数値がセットされているかの確認
+
+//おかしな数値が入っていないか確認
+
 //一旦PDFの準備を行う
 /* pChart のライブラリを読み込む */
 include("../lib/pChart2.1.4/class/pData.class.php");
@@ -49,6 +54,8 @@ $pdf -> SetTextColor(220, 20, 60);
 
 //取りこぼし
 $koboshis = $_POST['koboshi'];
+//別解かどうか
+$bekkais = $_POST['bekkai'];
 //合計点算出
 $daimons = $_POST['daimon'];
 $goukeiten = 0;
@@ -93,6 +100,7 @@ try{
 	//hsdataの登録
 	foreach($koboshis as $key => $value){
 		$koboshi = $value;
+		$bekkai = $bekkais[$key];
 		$sql = "SELECT * from koumoku WHERE id = ?";
 		$st = $pdo -> prepare($sql);
 		$st->execute(array($key));
@@ -120,9 +128,9 @@ try{
 		foreach($st as $key => $value){
 			$now = $value[0];
 		}
-		$sql = "INSERT INTO hsdata VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$sql = "INSERT INTO hsdata VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$st = $pdo -> prepare($sql);
-		$st->execute(array(0, $touanid, $_SESSION['account_ex'], $_POST['exid'], $_POST['stuid'], $_POST['koza'], $_POST['univcode'], $_POST['shikenshu'], $_POST['nendo'], $_POST['kaisu'], $daimon, $shomon, $junban, $haiten, $rank, $koboshi, $now));
+		$st->execute(array(0, $touanid, $_SESSION['account_ex'], $_POST['exid'], $_POST['stuid'], $_POST['koza'], $_POST['univcode'], $_POST['shikenshu'], $_POST['nendo'], $_POST['kaisu'], $daimon, $shomon, $junban, $haiten, $rank, $koboshi, $bekkai, $now));
 	}
 	//「～が取れれば」を求める
 	$items['xpoints']= $goukeiten - $hanigai + $items['xall'];
@@ -148,7 +156,15 @@ try{
 			$posy = $row['posy'];
 			$pdfid = $row['pdfid'];
 		}
-		$pdf -> Text($posx,$posy,$koboshi);
+		if($bekkais[$key] == 0){
+			$pdf -> Text($posx,$posy,$koboshi);
+		}else{
+			$pdf -> SetFont('kacho', '', 10);
+			//$pdf->SetXY( $posx, $posy );
+			//$pdf->Cell(20, 10, '別解', 0, 0, 'C');
+			$pdf -> Text($posx,$posy,'別解');
+			$pdf -> SetFont('kacho', '', 14);
+		}
 	}
 
 	//ヒストグラムを追加する

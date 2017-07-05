@@ -24,6 +24,23 @@ MathJax.Hub.Config({
   displayIndent: "2em"
 });
 </script>
+<script>
+//別解用関数
+function connecttext(numboxname, ischecked) {
+	if( ischecked == true ) {
+	// チェックが入っていたら無効化
+		var numbox = document.getElementsByName(numboxname);
+		numbox[1].disabled = true;
+		numbox[1].value = 0;
+	}
+	else {
+	// チェックが入っていなかったら有効化
+		var numbox = document.getElementsByName(numboxname);
+		numbox[1].disabled = false;
+		numbox[1].value = '';
+	}
+}
+</script>
 
 <script src="js/checkfunc.js"></script>
 
@@ -74,7 +91,7 @@ ID:<?= $exid?>	生徒番号:<?= $stuid?>	〈<?= $univname?><?= $nendo?>年度	�
 </div>
 <div>
 	<div class="content_title">大問得点入力</div>
-	<form action="shishin_result.php" method="post">
+	<form action="shishin_result.php" method="post" name="shishinform">
 	<table class="main_table">
 	<tr>
 	<?php
@@ -100,6 +117,7 @@ ID:<?= $exid?>	生徒番号:<?= $stuid?>	〈<?= $univname?><?= $nendo?>年度	�
 	?>
 		<td>
 		<?php if($row['kaitou']){?>
+		<input type="hidden" name="manten[<?=$row['daimon']?>]" value="<?=$row['manten']?>">
 		<input type="number" style="width:60px;" name="daimon[<?=$row['daimon']?>]" min="0" max="<?=$row['manten']?>" required>
 		<?php
 		echo '/'.$row['manten'];
@@ -142,6 +160,7 @@ ID:<?= $exid?>	生徒番号:<?= $stuid?>	〈<?= $univname?><?= $nendo?>年度	�
 		<th>配点</th>
 		<th>ランク</th>
 		<th>取りこぼし</th>
+		<th>別解</th>
 	</tr>
 	<?php
 	//前行の大問・小問番号保存用
@@ -175,7 +194,9 @@ ID:<?= $exid?>	生徒番号:<?= $stuid?>	〈<?= $univname?><?= $nendo?>年度	�
 		<?php
 		}?>
 		<td class ="koumoku"><?php echo $row['koumoku']; ?></td>
-		<td><?php echo $row['haiten']; ?></td>
+		<td><?php echo $row['haiten']; ?>
+		<input type="hidden" name="koboshimax[<?=$row['id']?>]" value="<?=$row['haiten']?>">
+		</td>
 		<td><?php
 		switch($row['rank']){
 			case 0:
@@ -188,7 +209,14 @@ ID:<?= $exid?>	生徒番号:<?= $stuid?>	〈<?= $univname?><?= $nendo?>年度	�
 				echo "B";
 				break;
 		}?></td>
-		<td><input type="number" style="width:60px;" name="koboshi[<?=$row['id']?>]" min="0" max="<?=$row['haiten']?>" required>/<?=$row['haiten']?></td>
+		<td>
+		<input type="hidden" name="shozokudaimon[<?=$row['id']?>]" value="<?=$row['daimon']?>">
+		<input type="hidden" name="koboshi[<?=$row['id']?>]" value="0">
+		<input type="number" style="width:60px;" name="koboshi[<?=$row['id']?>]" min="0" max="<?=$row['haiten']?>" required>/<?=$row['haiten']?></td>
+		<td>
+		<input type="hidden" name="bekkai[<?=$row['id']?>]" value="0">
+		<input type="checkbox" name="bekkai[<?=$row['id']?>]" value="1" onclick="connecttext('koboshi[<?=$row['id']?>]',this.checked);">
+		</td>
 		</tr>
 	<?php
 	$d_change = 0;//戻しておく
