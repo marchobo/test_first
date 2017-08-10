@@ -1,4 +1,7 @@
 <?php
+ini_set("display_errors", On);
+error_reporting(E_ALL);
+
 require_once('session_check.php');
 
 //tcpdfとfpdiのインクルード
@@ -51,8 +54,13 @@ $pdf -> SetTextColor(220, 20, 60);
 $sql = "select * from pdfpos where pdfid = ?";
 $st = $pdo -> prepare($sql);
 $st->execute(array($_SESSION['pdfid']));
+$pdf->SetDrawColor(255, 0, 0);//セルの線の描画色設定
+$pdf->SetFillColor(255, 150, 150);//セルの背景色設定
+$pdf->SetAlpha(0.5);//オブジェクトの半透明化
 foreach($st as $row){
-	$pdf -> Text($row['posx'],$row['posy'],"00");
+	$pdf->SetXY($row['posx'], $row['posy']);
+	$pdf->Cell(7.5, 5.5, '00', 1, 0, 'C', 1);
+	//$pdf -> Text($row['posx'],$row['posy'],"00");
 }
 
 //その他項目について、文字を書き込む
@@ -70,9 +78,12 @@ foreach($st as $row){
 		$size=$row2['size'];
 	}
 	$pdf -> SetFont('kachob', '', $size);
-	$pdf -> Text($row['posx'],$row['posy'],"00");
+	$pdf->SetXY($row['posx'], $row['posy']);
+	$pdf->Cell(12, 7, '100', 1, 0, 'R', 1);
+	//$pdf -> Text($row['posx'],$row['posy'],"100");
 }
 
+$pdf->SetAlpha(1);//不透明へ戻す
 //imgについて、大きさに応じた矩形を書き込む
 $sql = "select * from pdfpos_img where pdfid = ?";
 $st = $pdo -> prepare($sql);

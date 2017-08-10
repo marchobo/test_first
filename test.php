@@ -1,8 +1,51 @@
 <?php
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
+
 /* pChart library inclusions */
 include("lib/pChart2.1.4/class/pData.class.php");
 include("lib/pChart2.1.4/class/pDraw.class.php");
 include("lib/pChart2.1.4/class/pImage.class.php");
+
+
+function myRender($picture, $FileName)
+{
+	if ( $picture->TransparentBackground ){
+		imagealphablending($picture->Picture,false);
+		imagesavealpha($picture->Picture,true);
+	}
+	imagepng($picture->Picture,$FileName);
+}
+
+/**
+ * ランダム文字列生成 (英数字)
+ * $length: 生成する文字数
+ */
+function makeRandStr($length) {
+	$str = array_merge(range('a', 'z'), range('0', '9'), range('A', 'Z'));
+	$r_str = null;
+	for ($i = 0; $i < $length; $i++) {
+		$r_str .= $str[rand(0, count($str) - 1)];
+	}
+	return $r_str;
+}
+
+// アップした答案PDFファイルの保存先
+$uploadfile = 'pdf/'.$_POST['univcode'].$_POST['shikenshu'].$_POST['nendo'].'_'.makeRandStr(4).'.pdf';
+//エラーコード2だった場合（HTMLのファイル制限超過）
+if ($_FILES['upload']['error'] === 2) {
+	die('ファイルサイズを小さくしてください！');
+
+//サイズが0だった場合（ファイルが空）
+} elseif ($_FILES['upload']['size'] === 0) {
+	die('ファイルを選択してください！');
+
+//PDFファイルじゃなかった場合
+} elseif ($_FILES['upload']['type'] !== 'application/pdf') {
+	die('PDFファイルを選択してください！');
+}
+// アップロードされたファイルに、パスとファイル名を設定して保存
+move_uploaded_file($_FILES['upload']['tmp_name'], $uploadfile);
 
 // データセット用オブジェクトの生成
 $myData = new pData();
@@ -68,7 +111,9 @@ $Config = array("DisplayValues"=>1, "OverrideColors"=>$Palette);
 $myPicture->drawBarChart($Config);
 
 // 描いたグラフの保存
-$myPicture->render("mypic.png");
+imagepng($myPicture->Picture,"mypic.png");
+imagejpeg($myPicture->Picture,"mypic.jpg");
+myRender($myPicture, "mypic.png");
 //$myPicture->autoOutput("mypic.png");
 
 
@@ -114,6 +159,8 @@ $pdf->SetLineWidth(0.3);
 //出力前にクリーンにしないとエラー出る
 ob_end_clean();
 
-//PDFをブラウザに出力する
-$pdf->Output('test_shishin.pdf', "D");
+//PDFをダウンロード
+$pdf->Output(__DIR__.'/pdf/021423301611111111.pdf', "F");
+
+
 ?>

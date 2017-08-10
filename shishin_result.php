@@ -14,38 +14,11 @@ if ($_POST['token'] != $_SESSION['token']){
 
 //おかしな数値が入っていないか確認
 
-//現在の年度を求める
-function getFiscalYear(DateTime $theDate, $startDay='04-01') {
-	/**
-	 * 年度開始日との差分を取得
-	 * ex.) 2016年04月01日 -(引く) 2016年04月01日(年度開始日) = 差分0日 (invert = 0
-	 * ex.) 2016年01月01日 -(引く) 2016年04月01日(年度開始日) = マイナス3ヶ月 (invert = 1
-	 */
-	$diff = (new DateTime($theDate->format('Y') . '-' . $startDay))->diff($theDate);
-	if ( $diff->invert ) { // 引き算の結果がマイナスだった場合には早生まれ状態
-		return intval($theDate->format('Y')) - 1;
-	} else { // そのまま
-		return intval($theDate->format('Y'));
-	}
-}
-$nowdate = new DateTime();
-$fiscalyear = getFiscalYear($nowdate);
-
 //一旦PDFの準備を行う
 /* pChart のライブラリを読み込む */
 include("../lib/pChart2.1.4/class/pData.class.php");
 include("../lib/pChart2.1.4/class/pDraw.class.php");
 include("../lib/pChart2.1.4/class/pImage.class.php");
-
-//pChartで画像保存がrenderでうまく行かなかったため、ここで関数を定義しておく
-function myRender($picture, $FileName)
-{
-	if ( $picture->TransparentBackground ){
-		imagealphablending($picture->Picture,false);
-		imagesavealpha($picture->Picture,true);
-	}
-	imagepng($picture->Picture,$FileName);
-}
 
 //FPDIのインスタンス化
 $pdf = new FPDI();
@@ -221,140 +194,137 @@ try{
 		$stage=4;
 	}
 	//ここからヒストグラムを作成
-	//最新年度のばあいを除く
-	if($_POST['nendo']==$fiscalyear){
-		// 最新年度は存在しない旨を画像で貼付
-		$histoname = "../static/alert_".$_POST['nendo'].".png";
+	// データセット用オブジェクトの生成
+	$myData = new pData();
+	// ヒストグラムのデータセットを追加
+	$histoarray = array();
+	$xarray = array();
+	$sql = "SELECT * from histodata WHERE univcode = ? and shikenshu = ? and nendo = ?";
+	$st = $pdo -> prepare($sql);
+	$st->execute(array($_POST['univcode'], $_POST['shikenshu'], $_POST['nendo']));
+	foreach($st as $row){
+		$histoarray[]=$row['wariai'];
+		if($row['point']>0){
+			$xarray[]='～'.$row['point'];
+		}else{
+			$xarray[]=$row['point'];
+		}
 	}
-	else{
-		// データセット用オブジェクトの生成
-		$myData = new pData();
-		// ヒストグラムのデータセットを追加
-		$histoarray = array();
-		$xarray = array();
-		$sql = "SELECT * from histodata WHERE univcode = ? and shikenshu = ? and nendo = ?";
-		$st = $pdo -> prepare($sql);
-		$st->execute(array($_POST['univcode'], $_POST['shikenshu'], $_POST['nendo']));
-		foreach($st as $row){
-			$histoarray[]=$row['wariai'];
-			if($row['point']>0){
-				$xarray[]='～'.$row['point'];
-			}else{
-				$xarray[]=$row['point'];
-			}
+	$myData->addPoints($histoarray,"histo");
+	// ヒストグラムのラベル
+	$myData->setSerieDescription("histo"," あなたの位置");
+	$myData->setSerieOnAxis("histo",0);
+
+	// X軸に表示する項目
+	$myData->addPoints($xarray,"Absissa");
+	$myData->setAbscissa("Absissa");
+
+	// グラフのサイズとデータセットを引数に渡してpChartオブジェクトを生成
+	$myPicture = new pImage(1200,900,$myData);
+
+	// フォントとサイズを指定
+	$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>40));
+
+	// グラフの出力位置と大きさを指定(右からX軸、Y軸、幅、高さ)
+	$myPicture->setGraphArea(75,150,1125,850);
+
+	// 背景色を指定
+	$Settings = array("R"=>235, "G"=>235, "B"=>235);
+	// 背景を描く
+	$myPicture->drawFilledRectangle(0,0,1200,900,$Settings);
+
+	/*タイトル*/
+	// フォントとサイズを指定
+	$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>40));
+	// タイトルの出力位置と文字の色を指定
+	$TextSettings = array("Align"=>TEXT_ALIGN_MIDDLEMIDDLE, "R"=>0, "G"=>0, "B"=>0);
+	// テキストの出力位置、文字列とフォントの情報を引数にしてタイトルを出力
+	$myPicture->drawText(600,50,"得点分布(%)",$TextSettings);
+
+	/*点数情報*/
+	// フォントとサイズを指定
+	$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>30));
+	// 合計点の出力位置と文字の色を指定
+	$TextSettings = array("Align"=>TEXT_ALIGN_TOPLEFT, "R"=>0, "G"=>0, "B"=>0);
+	// 合計点の出力位置、文字列とフォントの情報を引数にしてタイトルを出力
+	$myPicture->drawText(850,170,"得点： ".$goukeiten." / ".$manten,$TextSettings);
+
+	// 偏差値の出力位置と文字の色を指定
+	$TextSettings = array("Align"=>TEXT_ALIGN_TOPLEFT, "R"=>0, "G"=>0, "B"=>0);
+	// 偏差値の出力位置、文字列とフォントの情報を引数にしてタイトルを出力
+	$myPicture->drawText(850,220,"偏差値： ".$devvalue,$TextSettings);
+
+
+
+	// フォントサイズを切り替え
+	$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>22));
+
+	// 目盛を書く
+	$myPicture->drawScale();
+
+	//一旦、生徒の位置の色にパレット設定して凡例も書く
+	//場合分け
+	$legcolarray = array();//凡例用
+	$barcolarray = array();//生徒の位置の棒グラフ用
+	$grayarray = array("R"=>100,"G"=>100,"B"=>100,"Alpha"=>255);//生徒の位置以外の棒グラフ用
+	switch($stage){
+		case 1:
+			$legcolarray = array("R"=>255,"G"=>0,"B"=>0);
+			$barcolarray = array("R"=>255,"G"=>0,"B"=>0,"Alpha"=>255);
+			break;
+		case 2:
+			$legcolarray = array("R"=>255,"G"=>255,"B"=>0);
+			$barcolarray = array("R"=>255,"G"=>255,"B"=>0,"Alpha"=>255);
+			break;
+		case 3:
+			$legcolarray = array("R"=>0,"G"=>255,"B"=>0);
+			$barcolarray = array("R"=>0,"G"=>255,"B"=>0,"Alpha"=>255);
+			break;
+		case 4:
+			$legcolarray = array("R"=>0,"G"=>0,"B"=>255);
+			$barcolarray = array("R"=>0,"G"=>0,"B"=>255,"Alpha"=>255);
+			break;
+		default:
+			die();
+	}
+	//実際に書く
+	$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>32));
+	$myData->setPalette("histo",$legcolarray);
+	$myPicture->drawLegend(850,50,array("BoxWidth"=>30,"BoxHeight"=>30,"Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
+
+	// フォントサイズを切り替え
+	$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>22));
+
+	/* 棒グラフのパレットの設定 */
+	$Palette = array();
+	$sql = "SELECT * from histodata WHERE univcode = ? and shikenshu = ? and nendo = ?";
+	$st = $pdo -> prepare($sql);
+	$st->execute(array($_POST['univcode'], $_POST['shikenshu'], $_POST['nendo']));
+	foreach($st as $row){
+		$point_order = $row['point']/10;
+		if($point_order==$classval){
+			$Palette = $Palette + array($point_order => $barcolarray);
+		}else{
+			$Palette = $Palette + array($point_order => $grayarray);
 		}
-		$myData->addPoints($histoarray,"histo");
-		// ヒストグラムのラベル
-		$myData->setSerieDescription("histo"," あなたの位置");
-		$myData->setSerieOnAxis("histo",0);
-
-		// X軸に表示する項目
-		$myData->addPoints($xarray,"Absissa");
-		$myData->setAbscissa("Absissa");
-
-		// グラフのサイズとデータセットを引数に渡してpChartオブジェクトを生成
-		$myPicture = new pImage(1200,900,$myData);
-
-		// フォントとサイズを指定
-		$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>40));
-
-		// グラフの出力位置と大きさを指定(右からX軸、Y軸、幅、高さ)
-		$myPicture->setGraphArea(75,150,1125,850);
-
-		// 背景色を指定
-		$Settings = array("R"=>235, "G"=>235, "B"=>235);
-		// 背景を描く
-		$myPicture->drawFilledRectangle(0,0,1200,900,$Settings);
-
-		/*タイトル*/
-		// フォントとサイズを指定
-		$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>40));
-		// タイトルの出力位置と文字の色を指定
-		$TextSettings = array("Align"=>TEXT_ALIGN_MIDDLEMIDDLE, "R"=>0, "G"=>0, "B"=>0);
-		// テキストの出力位置、文字列とフォントの情報を引数にしてタイトルを出力
-		$myPicture->drawText(600,50,"得点分布(%)",$TextSettings);
-
-		/*点数情報*/
-		// フォントとサイズを指定
-		$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>30));
-		// 合計点の出力位置と文字の色を指定
-		$TextSettings = array("Align"=>TEXT_ALIGN_TOPLEFT, "R"=>0, "G"=>0, "B"=>0);
-		// 合計点の出力位置、文字列とフォントの情報を引数にしてタイトルを出力
-		$myPicture->drawText(850,170,"得点： ".$goukeiten." / ".$manten,$TextSettings);
-
-		// 偏差値の出力位置と文字の色を指定
-		$TextSettings = array("Align"=>TEXT_ALIGN_TOPLEFT, "R"=>0, "G"=>0, "B"=>0);
-		// 偏差値の出力位置、文字列とフォントの情報を引数にしてタイトルを出力
-		$myPicture->drawText(850,220,"偏差値： ".$devvalue,$TextSettings);
-
-
-
-		// フォントサイズを切り替え
-		$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>22));
-
-		// 目盛を書く
-		$myPicture->drawScale();
-
-		//一旦、生徒の位置の色にパレット設定して凡例も書く
-		//場合分け
-		$legcolarray = array();//凡例用
-		$barcolarray = array();//生徒の位置の棒グラフ用
-		$grayarray = array("R"=>100,"G"=>100,"B"=>100,"Alpha"=>255);//生徒の位置以外の棒グラフ用
-		switch($stage){
-			case 1:
-				$legcolarray = array("R"=>255,"G"=>0,"B"=>0);
-				$barcolarray = array("R"=>255,"G"=>0,"B"=>0,"Alpha"=>255);
-				break;
-			case 2:
-				$legcolarray = array("R"=>255,"G"=>255,"B"=>0);
-				$barcolarray = array("R"=>255,"G"=>255,"B"=>0,"Alpha"=>255);
-				break;
-			case 3:
-				$legcolarray = array("R"=>0,"G"=>255,"B"=>0);
-				$barcolarray = array("R"=>0,"G"=>255,"B"=>0,"Alpha"=>255);
-				break;
-			case 4:
-				$legcolarray = array("R"=>0,"G"=>0,"B"=>255);
-				$barcolarray = array("R"=>0,"G"=>0,"B"=>255,"Alpha"=>255);
-				break;
-			default:
-				die();
-		}
-		//実際に書く
-		$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>32));
-		$myData->setPalette("histo",$legcolarray);
-		$myPicture->drawLegend(850,50,array("BoxWidth"=>30,"BoxHeight"=>30,"Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
-
-		// フォントサイズを切り替え
-		$myPicture->setFontProperties(array("FontName"=>"../lib/pChart2.1.4/fonts/kacho-regular.ttf","FontSize"=>22));
-
-		/* 棒グラフのパレットの設定 */
-		$Palette = array();
-		$sql = "SELECT * from histodata WHERE univcode = ? and shikenshu = ? and nendo = ?";
-		$st = $pdo -> prepare($sql);
-		$st->execute(array($_POST['univcode'], $_POST['shikenshu'], $_POST['nendo']));
-		foreach($st as $row){
-			$point_order = $row['point']/10;
-			if($point_order==$classval){
-				$Palette = $Palette + array($point_order => $barcolarray);
-			}else{
-				$Palette = $Palette + array($point_order => $grayarray);
-			}
-		}
-
-		// グラフのバーにデータセットの数値を表示する、グラデーションを付けるオプション
-		$Config = array("DisplayValues"=>1, "OverrideColors"=>$Palette);
-
-		/* Enable shadow support */
-		$myPicture->setShadow(TRUE,array("X"=>2,"Y"=>2,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>20));
-		// 描くグラフの種類をメソッド名で指定
-		$myPicture->drawBarChart($Config);
-
-		// 描いたグラフの保存
-		$histoname = "../temp/histo_".$_POST['stuid']."_".$_POST['nendo']."_".$_POST['kaisu'].mt_rand(0,9).".png";
-		myRender($myPicture, $histoname);
 	}
 
+	// グラフのバーにデータセットの数値を表示する、グラデーションを付けるオプション
+	$Config = array("DisplayValues"=>1, "OverrideColors"=>$Palette);
+
+	/* Enable shadow support */
+	$myPicture->setShadow(TRUE,array("X"=>2,"Y"=>2,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>20));
+	// 描くグラフの種類をメソッド名で指定
+	$myPicture->drawBarChart($Config);
+
+	// 描いたグラフの保存
+	$histoname = "temp/histo_".$_POST['stuid'].mt_rand(100,999).".png";
+	$myPicture->render("histo.png");
+	$myPicture->autoOutput("histo2.png");
+	//$myPicture->render('../temp/histo_2222222.png');
+	//$myPicture->render('temp/histo_2222222.png');
+	//$myPicture->render('../histo_2222222.png');
+	//$myPicture->render($histoname);
 
 	//pdfに貼り付け
 	$paths['histo'] = $histoname;
